@@ -8,6 +8,11 @@ class ConektaObject extends ArrayObject
 {
     protected $_values;
 
+    protected $id;
+
+    protected self $metadata;
+
+
     public function __construct($id = null)
     {
         $this->_values = [];
@@ -25,7 +30,7 @@ class ConektaObject extends ArrayObject
         unset($this->_values[$object], $object);
     }
 
-    public function loadFromArray($values)
+    public function loadFromArray(array $values = [])
     {
         foreach ($values as $object => $val) {
             if (is_array($val)) {
@@ -52,7 +57,7 @@ class ConektaObject extends ArrayObject
         }
     }
 
-    public function __toJSON()
+    public function __toJSON(): string
     {
         if (defined('JSON_PRETTY_PRINT')) {
             return json_encode($this->_toArray(), JSON_PRETTY_PRINT);
@@ -61,7 +66,7 @@ class ConektaObject extends ArrayObject
         }
     }
 
-    protected function _toArray()
+    protected function _toArray(): array
     {
         $array = [];
         foreach ($this->_values as $object => $val) {
@@ -77,7 +82,7 @@ class ConektaObject extends ArrayObject
         return $array;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->__toJSON();
     }

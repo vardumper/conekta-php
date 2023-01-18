@@ -6,24 +6,26 @@ use Conekta\{Conekta, ConektaResource, Exceptions, Lang};
 
 class DiscountLine extends ConektaResource
 {
-     public $code = '';
-     public $amount = '';
-     public $type = '';
-     public $parentId = '';
+    public $code = '';
+    public $amount = '';
+    public $type = '';
+    public $parentId = '';
+    public $apiVersion = '';
 
-    public function __get($property)
+    public function __get(string $property): ?string
     {
         if (property_exists($this, $property)) {
             return $this->{$property};
         }
+        return null;
     }
 
-    public function __isset($property)
+    public function __isset($property): bool
     {
         return isset($this->{$property});
     }
 
-    public function instanceUrl()
+    public function instanceUrl(): string
     {
         $this->apiVersion = Conekta::$apiVersion;
         $id = $this->id;
@@ -36,12 +38,12 @@ class DiscountLine extends ConektaResource
         return $orderUrl . $base . "/{$extn}";
     }
 
-    public function update($params = null)
+    public function update($params = null): ConektaResource
     {
         return parent::_update($params);
     }
 
-    public function delete()
+    public function delete(): ConektaResource
     {
         return parent::_delete('order', 'discount_lines');
     }

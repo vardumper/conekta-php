@@ -4,22 +4,23 @@ namespace Conekta;
 
 class Address extends ConektaResource
 {
-     public $street1 = '';
-     public $street2 = '';
-     public $street3 = '';
-     public $city = '';
-     public $state = '';
-     public $zip = '';
-     public $country = '';
+    public string $street1 = '';
+    public string $street2 = '';
+    public string $street3 = '';
+    public string $city = '';
+    public string $state = '';
+    public string $zip = '';
+    public string $country = '';
 
-    public function __get($property)
+    public function __get($property): ?string
     {
         if (property_exists($this, $property)) {
             return $this->{$property};
         }
+        return null;
     }
 
-    public function __isset($property)
+    public function __isset($property): bool
     {
         return isset($this->{$property});
     }

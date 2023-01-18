@@ -4,15 +4,15 @@ namespace Conekta;
 
 class Order extends ConektaResource
 {
-     public $livemode = '';
-     public $amount = '';
-     public $paymentStatus = '';
-     public $customerId = '';
-     public $currency = '';
-     public $capture = '';
-     public $metadata = '';
-     public $createdAt = '';
-     public $updatedAt = '';
+    public $livemode = '';
+    public $amount = '';
+    public $paymentStatus = '';
+    public $customerId = '';
+    public $currency = '';
+    public $capture = '';
+    public ConektaObject $metadata;
+    public $createdAt = '';
+    public $updatedAt = '';
 
     public function __get($property)
     {
@@ -33,8 +33,8 @@ class Order extends ConektaResource
         }
 
         $submodels = [
-      'tax_lines', 'shipping_lines', 'discount_lines', 'line_items', 'charges', 'returns'
-      ];
+            'tax_lines', 'shipping_lines', 'discount_lines', 'line_items', 'charges', 'returns'
+        ];
 
         foreach ($submodels as $submodel) {
             if (isset($values[$submodel])) {

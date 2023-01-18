@@ -6,10 +6,13 @@ use Conekta\{Conekta, ConektaResource, Error, Lang};
 
 class PaymentSource extends ConektaResource
 {
+    public $apiVersion;
+    public $customer;
+
     public const TYPE_CARD = 'card';
     public const TYPE_OXXO_RECURRENT = 'oxxo_recurrent';
 
-    public function instanceUrl()
+    public function instanceUrl(): string
     {
         $this->apiVersion = Conekta::$apiVersion;
         $id = $this->id;
@@ -22,7 +25,7 @@ class PaymentSource extends ConektaResource
         return $customerUrl . $base . "/{$extn}";
     }
 
-    public function update($params = null)
+    public function update(array $params = []): ConektaResource
     {
         return parent::_update($params);
     }

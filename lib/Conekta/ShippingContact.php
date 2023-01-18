@@ -6,17 +6,20 @@ use Conekta\{Conekta, ConektaResource, Exceptions, Lang};
 
 class ShippingContact extends ConektaResource
 {
-     public $receiver = '';
-     public $phone = '';
-     public $betweenStreets = '';
-     public $parentId = '';
-     public $default = '';
+    public $receiver = '';
+    public $phone = '';
+    public $betweenStreets = '';
+    public $parentId = '';
+    public $default = '';
 
-    public function __get($property)
+    protected string $apiVersion;
+
+    public function __get(string $property): ?string
     {
         if (property_exists($this, $property)) {
             return $this->{$property};
         }
+        return null;
     }
 
     public function __isset($property)
@@ -24,7 +27,7 @@ class ShippingContact extends ConektaResource
         return isset($this->{$property});
     }
 
-    public function instanceUrl()
+    public function instanceUrl(): string
     {
         $this->apiVersion = Conekta::$apiVersion;
         $id = $this->id;

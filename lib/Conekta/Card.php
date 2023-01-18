@@ -6,29 +6,31 @@ use Conekta\{Conekta, ConektaResource, Exceptions, Lang};
 
 class Card extends ConektaResource
 {
-     public $createdAt = '';
-     public $last4 = '';
-     public $bin = '';
-     public $name = '';
-     public $expMonth = '';
-     public $expYear = '';
-     public $brand = '';
-     public $parentId = '';
-     public $default = '';
+    public string $createdAt = '';
+    public string $last4 = '';
+    public string $bin = '';
+    public string $name = '';
+    public string $expMonth = '';
+    public string $expYear = '';
+    public string $brand = '';
+    public string $parentId = '';
+    public string $default = '';
+    public string $apiVersion;
 
-    public function __get($property)
+    public function __get($property): ?string
     {
         if (property_exists($this, $property)) {
             return $this->{$property};
         }
+        return null;
     }
 
-    public function __isset($property)
+    public function __isset($property): bool
     {
         return isset($this->{$property});
     }
 
-    public function instanceUrl()
+    public function instanceUrl(): string
     {
         $this->apiVersion = Conekta::$apiVersion;
         $id = $this->id;
@@ -41,12 +43,12 @@ class Card extends ConektaResource
         return $customerUrl . $base . "/{$extn}";
     }
 
-    public function update($params = null)
+    public function update($params = null): self
     {
         return parent::_update($params);
     }
 
-    public function delete()
+    public function delete(): self
     {
         return parent::_delete('customer', 'cards');
     }

@@ -9,22 +9,22 @@ class Lang
 
     protected static array $cache = [];
 
-    public static function translate($key, $locale, $parameters = [])
+    public static function translate(string $key, string $locale, array $parameters = []): string
     {
         $parameters = str_replace('Conekta\\', '', $parameters);
 
-        $langs = self::readDirectory(dirname(__FILE__) . '/../locales/messages');
+        $langs = self::readDirectory(\dirname(__FILE__) . '/../locales/messages');
 
-        $keys = explode('.', $locale . '.' . $key);
-        $result = $langs[array_shift($keys)];
+        $keys = \explode('.', $locale . '.' . $key);
+        $result = $langs[\array_shift($keys)];
 
         foreach ($keys as $val) {
             $result = $result[$val];
         }
 
-        if (is_array($parameters) && ! empty($parameters)) {
+        if (is_array($parameters) && !empty($parameters)) {
             foreach ($parameters as $object => $val) {
-                $result = str_replace($object, $val, $result);
+                $result = \str_replace($object, $val, $result);
             }
         }
 
@@ -33,7 +33,7 @@ class Lang
 
     protected static function readDirectory($directory)
     {
-        if (! empty(self::$cache)) {
+        if (!empty(self::$cache)) {
             return self::$cache;
         }
 

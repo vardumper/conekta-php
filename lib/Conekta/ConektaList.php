@@ -8,6 +8,11 @@ class ConektaList extends ConektaObject
 {
     public const LIMIT = 5;
 
+    public $elements_type;
+    public array $params;
+    public int $total;
+    public bool $has_more;
+
     public function __construct($elements_type, $params = [])
     {
         parent::__construct();
@@ -16,7 +21,7 @@ class ConektaList extends ConektaObject
         $this->total = 0;
     }
 
-    public function addElement($element)
+    public function addElement($element): self
     {
         $element = Util::convertToConektaObject($element);
         $array_length = count($this->_values);
@@ -27,9 +32,9 @@ class ConektaList extends ConektaObject
         return $this;
     }
 
-    public function loadFromArray($values = null)
+    public function loadFromArray(array $values = []): void
     {
-        if (isset($values)) {
+        if (!empty($values)) {
             $this->has_more = $values['has_more'];
             $this->total = $values['total'];
 
@@ -39,11 +44,11 @@ class ConektaList extends ConektaObject
         }
 
         if (isset($values['data'])) {
-            return parent::loadFromArray($values['data']);
+            parent::loadFromArray($values['data']);
         }
     }
 
-    public function next($options = ['limit' => self::LIMIT])
+    public function next(array $options = ['limit' => self::LIMIT]): void
     {
         if (sizeOf($this) > 0) {
             $array = (array) $this;
@@ -51,10 +56,10 @@ class ConektaList extends ConektaObject
         }
 
         $this->params['previous'] = null;
-        return $this->_moveCursor($options['limit']);
+        $this->_moveCursor($options['limit']);
     }
 
-    public function previous($options = ['limit' => self::LIMIT])
+    public function previous(array $options = ['limit' => self::LIMIT]): void
     {
         if (sizeOf($this) > 0) {
             $this->params['previous'] = $this[0]->id;
@@ -62,7 +67,7 @@ class ConektaList extends ConektaObject
 
         $this->params['next'] = null;
 
-        return $this->_moveCursor($options['limit']);
+        $this->_moveCursor($options['limit']);
     }
 
     protected function _moveCursor($limit)

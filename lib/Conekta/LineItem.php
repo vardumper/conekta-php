@@ -6,30 +6,33 @@ use Conekta\{Conekta, ConektaResource, Exceptions, Lang};
 
 class LineItem extends ConektaResource
 {
-     public $name = '';
-     public $description = '';
-     public $unitPrice = '';
-     public $quantity = '';
-     public $sku = '';
-     public $shippable = '';
-     public $tags = '';
-     public $brand = '';
-     public $type = '';
-     public $parentId = '';
+    public $name = '';
+    public $description = '';
+    public $unitPrice = '';
+    public $quantity = '';
+    public $sku = '';
+    public $shippable = '';
+    public $tags = '';
+    public $brand = '';
+    public $type = '';
+    public $parentId = '';
 
-    public function __get($property)
+    protected string $apiVersion;
+
+    public function __get(string $property): ?string
     {
         if (property_exists($this, $property)) {
             return $this->{$property};
         }
+        return null;
     }
 
-    public function __isset($property)
+    public function __isset(string $property): bool
     {
         return isset($this->{$property});
     }
 
-    public function instanceUrl()
+    public function instanceUrl(): string
     {
         $this->apiVersion = Conekta::$apiVersion;
         $id = $this->id;

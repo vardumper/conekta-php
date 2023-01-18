@@ -6,32 +6,32 @@ use Conekta\{Conekta, ConektaObject, Lang, NoConnectionError, Requestor, Util};
 
 abstract class ConektaResource extends ConektaObject
 {
-    public static function className($class)
+    public static function className(string $class): string
     {
         // Useful for namespaces: Foo\Charge
-        if ($postfix = strrchr($class, '\\')) {
-            $class = substr($postfix, 1);
+        if ($postfix = \strrchr($class, '\\')) {
+            $class = \substr($postfix, 1);
         }
         if (substr($class, 0, strlen('Conekta')) == 'Conekta') {
-            $class = substr($class, strlen('Conekta'));
+            $class = \substr($class, strlen('Conekta'));
         }
-        $class = str_replace('_', '', $class);
-        $name = urlencode($class);
-        $name = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
+        $class = \str_replace('_', '', $class);
+        $name = \urlencode($class);
+        $name = \strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
 
         return $name;
     }
 
     protected static function _getBase($class, $method)
     {
-        $args = array_slice(func_get_args(), 2);
+        $args = \array_slice(func_get_args(), 2);
 
-        return call_user_func_array([$class, $method], $args);
+        return \call_user_func_array([$class, $method], $args);
     }
 
-    public static function classUrl($class = null)
+    public static function classUrl(string $class = null): string
     {
-        if (empty($class)) {
+        if ($class === null) {
             throw new NoConnectionError(
                 Lang::translate('error.resource.id', Lang::EN, ['RESOURCE' => 'NULL']),
                 Lang::translate('error.resource.id_purchaser', Conekta::$locale)
@@ -41,10 +41,10 @@ abstract class ConektaResource extends ConektaObject
         return "/{$base}s";
     }
 
-    protected static function _scpWhere($class, $params)
+    protected static function _scpWhere($class, $params): ConektaObject
     {
         if (Conekta::$apiVersion == '2.0.0') {
-            $path = explode('\\', $class);
+            $path = \explode('\\', $class);
             $instance = new ConektaList(array_pop($path));
         } else {
             $instance = new ConektaObject();
@@ -57,7 +57,7 @@ abstract class ConektaResource extends ConektaObject
         return $instance;
     }
 
-    protected static function _scpFind($class, $id)
+    protected static function _scpFind(string $class, $id): object
     {
         $instance = new $class($id);
         $requestor = new Requestor();
@@ -68,11 +68,10 @@ abstract class ConektaResource extends ConektaObject
         return $instance;
     }
 
-    protected static function _scpCreate($class, $params)
+    protected static function _scpCreate($class, array $params = []): object
     {
         $requestor = new Requestor();
         $url = self::classUrl($class);
-        $params = is_array($params) ? $params : [];
         $response = $requestor->request('post', $url, $params);
         $instance = new $class();
         $instance->loadFromArray($response);
@@ -80,7 +79,7 @@ abstract class ConektaResource extends ConektaObject
         return $instance;
     }
 
-    public function instanceUrl()
+    public function instanceUrl(): string
     {
         $id = $this->id;
         $this->idValidator($id);
@@ -93,7 +92,7 @@ abstract class ConektaResource extends ConektaObject
 
     protected function idValidator($id)
     {
-        if (! $id) {
+        if (!$id) {
             $error = new ParameterValidationError(
                 Lang::translate('error.resource.id', Lang::EN, ['RESOURCE' => get_class()]),
                 Lang::translate('error.resource.id_purchaser', Conekta::$locale)
@@ -108,7 +107,7 @@ abstract class ConektaResource extends ConektaObject
         }
     }
 
-    protected function _delete($parent = null, $member = null)
+    protected function _delete($parent = null, $member = null): self
     {
         self::_customAction('delete', null, null);
         if (isset($parent, $member)) {
@@ -128,7 +127,7 @@ abstract class ConektaResource extends ConektaObject
         return $this;
     }
 
-    protected function _update($params)
+    protected function _update(array $params = []): self
     {
         $requestor = new Requestor();
         $url = $this->instanceUrl();
@@ -138,24 +137,25 @@ abstract class ConektaResource extends ConektaObject
         return $this;
     }
 
-    protected function _createMember($member, $params)
+    protected function _createMember($member, array $params = [])
     {
         $requestor = new Requestor();
         $url = $this->instanceUrl() . '/' . $member;
         $response = $requestor->request('post', $url, $params);
 
-        if ((! empty($this->{$member})
-      && (strpos(get_class($this->{$member}), 'ConektaList') !== false
-      || strpos(get_class($this->{$member}), 'ConektaObject') !== false))
-      || strpos($member, 'cards') !== false
-      || strpos($member, 'charges') !== false
-      || strpos($member, 'discount_lines') !== false
-      || strpos($member, 'line_items') !== false
-      || strpos($member, 'payment_sources') !== false
-      || strpos($member, 'payout_methods') !== false
-      || strpos($member, 'shipping_contacts') !== false
-      || strpos($member, 'shipping_lines') !== false
-      || strpos($member, 'tax_lines') !== false) {
+        if ((!empty($this->{$member})
+                && (strpos(get_class($this->{$member}), 'ConektaList') !== false
+                    || strpos(get_class($this->{$member}), 'ConektaObject') !== false))
+            || strpos($member, 'cards') !== false
+            || strpos($member, 'charges') !== false
+            || strpos($member, 'discount_lines') !== false
+            || strpos($member, 'line_items') !== false
+            || strpos($member, 'payment_sources') !== false
+            || strpos($member, 'payout_methods') !== false
+            || strpos($member, 'shipping_contacts') !== false
+            || strpos($member, 'shipping_lines') !== false
+            || strpos($member, 'tax_lines') !== false
+        ) {
             if (empty($this->{$member})) {
                 if (Conekta::$apiVersion == '2.0.0') {
                     $this->{$member} = new ConektaList($member);

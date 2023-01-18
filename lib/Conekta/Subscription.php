@@ -6,7 +6,10 @@ use Conekta\{Conekta, ConektaResource, Exceptions, Lang};
 
 class Subscription extends ConektaResource
 {
-    public function instanceUrl()
+    protected string $apiVersion;
+    protected ConektaResource $customer;
+
+    public function instanceUrl(): string
     {
         $this->apiVersion = Conekta::$apiVersion;
         $id = $this->id;

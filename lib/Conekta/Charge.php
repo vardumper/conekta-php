@@ -4,63 +4,64 @@ namespace Conekta;
 
 class Charge extends ConektaResource
 {
-     public $livemode = '';
-     public $amount = '';
-     public $createdAt = '';
-     public $currency = '';
-     public $description = '';
-     public $referenceId = '';
-     public $failureCode = '';
-     public $failureMessage = '';
-     public $fee = '';
-     public $monthlyInstallments = '';
-     public $deviceFingerprint = '';
-     public $status = '';
-     public $exchangeRate = '';
-     public $foreignCurrency = '';
-     public $amountInForeignCurrency = '';
-     public $checkoutId = '';
-     public $checkoutOrderCount = '';
+    public string $livemode = '';
+    public string $amount = '';
+    public string $createdAt = '';
+    public string $currency = '';
+    public string $description = '';
+    public string $referenceId = '';
+    public string $failureCode = '';
+    public string $failureMessage = '';
+    public string $fee = '';
+    public string $monthlyInstallments = '';
+    public string $deviceFingerprint = '';
+    public string $status = '';
+    public string $exchangeRate = '';
+    public string $foreignCurrency = '';
+    public string $amountInForeignCurrency = '';
+    public string $checkoutId = '';
+    public string $checkoutOrderCount = '';
 
-    public function __get($property)
+    public function __get($property): ?string
     {
         if (property_exists($this, $property)) {
             return $this->{$property};
         }
+        return null;
     }
 
-    public function __isset($property)
+    public function __isset($property): bool
     {
         return isset($this->{$property});
     }
 
-    public static function find($id)
+    public static function find($id): object
     {
         $class = get_called_class();
 
         return parent::_scpFind($class, $id);
     }
 
-    public static function where($params = null)
+    public static function where($params = null): object
     {
         $class = get_called_class();
 
         return parent::_scpWhere($class, $params);
     }
 
-    public static function create($params = null)
+    public static function create($params = null): object
     {
         $class = get_called_class();
 
         return parent::_scpCreate($class, $params);
     }
 
-    public function capture()
+    public function capture(): ConektaResource
     {
         return parent::_customAction('post', 'capture', null);
     }
 
-    public function refund($amount = null)
+    public function refund($amount = null): ConektaResource
     {
         $params = null;
         if (isset($amount)) {
